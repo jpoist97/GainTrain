@@ -32,7 +32,7 @@ export class WorkoutDataServiceStack extends Construct {
    //    entry: join(__dirname, 'lambdas', 'get-all.ts'),
    //    ...nodeJsFunctionProps,
    //  });
-    const createOneLambda = new NodejsFunction(this, 'createWorkoutFunction', {
+    const createWorkoutLambda = new NodejsFunction(this, 'createWorkoutFunction', {
       entry: join(__dirname, '..', '..', 'resources', 'workout', 'create-workout.js'),
       ...nodeJsFunctionProps,
     });
@@ -48,13 +48,13 @@ export class WorkoutDataServiceStack extends Construct {
     // Grant the Lambda function read access to the DynamoDB table
    //  dynamoTable.grantReadWriteData(getAllLambda);
    //  dynamoTable.grantReadWriteData(getOneLambda);
-    workoutDataTable.grantReadWriteData(createOneLambda);
+    workoutDataTable.grantReadWriteData(createWorkoutLambda);
    //  dynamoTable.grantReadWriteData(updateOneLambda);
    //  dynamoTable.grantReadWriteData(deleteOneLambda);
 
     // Integrate the Lambda functions with the API Gateway resource
    //  const getAllIntegration = new LambdaIntegration(getAllLambda);
-    const createOneIntegration = new LambdaIntegration(createOneLambda);
+    const createOneIntegration = new LambdaIntegration(createWorkoutLambda);
    //  const getOneIntegration = new LambdaIntegration(getOneLambda);
    //  const updateOneIntegration = new LambdaIntegration(updateOneLambda);
    //  const deleteOneIntegration = new LambdaIntegration(deleteOneLambda);

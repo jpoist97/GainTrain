@@ -5,11 +5,12 @@
    "private": true,
    "license": "MIT",
    "devDependencies": {
-     "@types/node": "*",
-     "@types/uuid": "*"
+      "@types/node": "*",
+      "@types/uuid": "*"
    },
    "dependencies": {
-     "aws-sdk": "*",
-     "uuid": "*"
+      "aws-sdk": "*",
+      "lodash": "^4.17.21",
+      "uuid": "*"
    }
- }
+}
