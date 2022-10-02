@@ -4,6 +4,7 @@ import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import * as workoutService from '../lib/services/workout-service';
 import * as exerciseService from '../lib/services/exercise-service';
 import * as cycleService from '../lib/services/cycle-service';
+import * as weightLogService from '../lib/services/weight-log-service';
 import { WORKOUT_DATA_TABLE, LOG_DATA_TABLE, } from '../constants/dynamo-constants';
 import { RestApi } from 'aws-cdk-lib/aws-apigateway';
 
@@ -45,5 +46,7 @@ export class InfrastructureStack extends cdk.Stack {
     new workoutService.WorkoutDataServiceStack(this, 'WorkoutStack', workoutDataTable, gainTrainApi);
     new exerciseService.ExerciseDataServiceStack(this, 'ExerciseStack', workoutDataTable, gainTrainApi);
     new cycleService.CycleDataServiceStack(this, 'CycleStack', workoutDataTable, gainTrainApi);
+
+    new weightLogService.WeightLogDataServiceStack(this, 'WeightLogStack', logDataTable, gainTrainApi);
   }
 }

@@ -1,6 +1,7 @@
 import { putItem, queryItems, } from '../utils/ddb-utils';
 import { LOG_DATA_TABLE, } from '../constants/dynamo-constants';
 import _ from 'lodash';
+import { DateTime } from 'luxon';
 
 function getPk(userSub) {
    return `${userSub}#weight`;
@@ -15,8 +16,7 @@ async function storeWeightLog({ userSub, weight }) {
       TableName: LOG_DATA_TABLE,
       Item: {
          pk: getPk(userSub),
-         // TODO: Update this to put the proper ISO formatted date, also import moment
-         sk: moment(),
+         sk: DateTime.utc().toISO(),
          weight,
       }
    }
@@ -24,16 +24,28 @@ async function storeWeightLog({ userSub, weight }) {
    await putItem(params);
 }
 
-// TODO: add a range to this function
-async function queryWeightLogs({ userSub, startTs, endTs }) {
+async function queryWeightLogs({ userSub, startTs, endTs, limit }) {
+   let KeyConditionExpression = 'pk = :pk';
+   const ExpressionAttributeValues = {
+      ':pk': getPk(userSub),
+   }
+
+   if(startTs && endTs) {
+      KeyConditionExpression += 'and sk between :startTs and :endTs';
+      ExpressionAttributeValues[':startTs'] = startTs;
+      ExpressionAttributeValues[':endTs'] = endTs;
+   }
+
    const queryParams = {
       TableName: LOG_DATA_TABLE,
       Select: 'ALL_ATTRIBUTES',
-      KeyConditionExpression: 'pk = :pk',
-      ExpressionAttributeValues: {
-         ':pk': getPk(userSub),
-      },
+      KeyConditionExpression,
+      ExpressionAttributeValues, 
    };
+
+   if (limit) {
+      queryParams['Limit'] = limit;
+   }
 
    const weightLogRecords = await queryItems(queryParams);
 

@@ -1,6 +1,7 @@
 import { putItem, querySingle, queryItems, } from '../utils/ddb-utils';
 import { LOG_DATA_TABLE, } from '../constants/dynamo-constants';
 import _ from 'lodash';
+import { DateTime } from 'luxon';
 
 function getPk(userSub, workoutId) {
    return `${userSub}#wo_log#${workoutId}`;
@@ -15,8 +16,7 @@ async function storeWorkoutLog({ userSub, workoutId, exercisesPerformed }) {
       TableName: LOG_DATA_TABLE,
       Item: {
          pk: getPk(userSub, workoutId),
-         // TODO: Update this to put the proper ISO formatted date, also import moment
-         sk: moment(),
+         sk: DateTime.utc().toISO(),
          exercisesPerformed,
       }
    }
@@ -43,14 +43,15 @@ async function getSingleWorkoutLog({ userSub, workoutId }) {
    return formatWorkoutLogRecord(workoutLogRecord);
 }
 
-// TODO: add a range to this function
 async function queryWorkoutLogs({ userSub, workoutId, startTs, endTs }) {
    const queryParams = {
       TableName: LOG_DATA_TABLE,
       Select: 'ALL_ATTRIBUTES',
-      KeyConditionExpression: 'pk = :pk',
+      KeyConditionExpression: 'pk = :pk and sk between :startTs and :endTs',
       ExpressionAttributeValues: {
          ':pk': getPk(userSub, workoutId),
+         ':startTs': startTs,
+         ':endTs': endTs,
       },
    };
 

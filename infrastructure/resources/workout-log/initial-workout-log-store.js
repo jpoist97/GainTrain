@@ -1,4 +1,4 @@
-import { putItem, querySingle, queryItems, } from '../utils/ddb-utils';
+import { putItem, querySingle, } from '../utils/ddb-utils';
 import { LOG_DATA_TABLE, } from '../constants/dynamo-constants';
 import _ from 'lodash';
 
@@ -15,7 +15,7 @@ async function storeWorkoutLog({ userSub, workoutId, exercisesPerformed }) {
       TableName: LOG_DATA_TABLE,
       Item: {
          pk: getPk(userSub),
-         sk: moment(workoutId),
+         sk: getSk(workoutId),
          exercisesPerformed,
       }
    }
