@@ -5,7 +5,7 @@ export const handler = async (event) => {
   const { cycleId } = event.pathParameters
 
   if (!userSub || !cycleId) {
-    return { statusCode: 400, body: 'No userSub or workoutId provided' };
+    return { statusCode: 400, body: 'No userSub or cycleId provided' };
   }
 
   try {
