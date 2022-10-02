@@ -1,6 +1,7 @@
 import { putItem, querySingle, queryItems, } from '../utils/ddb-utils';
 import { WORKOUT_DATA_TABLE, } from '../constants/dynamo-constants';
 import { v4 as uuidv4 } from 'uuid';
+import _ from 'lodash';
 
 function getPk(userSub) {
    return `${userSub}#cycle`;

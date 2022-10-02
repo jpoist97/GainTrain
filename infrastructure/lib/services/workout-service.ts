@@ -36,6 +36,14 @@ export class WorkoutDataServiceStack extends Construct {
       entry: join(__dirname, '..', '..', 'resources', 'workout', 'create-workout.js'),
       ...nodeJsFunctionProps,
     });
+    const getWorkoutLambda = new NodejsFunction(this, 'getWorkoutLambda', {
+      entry: join(__dirname, '..', '..', 'resources', 'workout', 'get-workout.js'),
+      ...nodeJsFunctionProps,
+    });
+    const getWorkoutsLambda = new NodejsFunction(this, 'getWorkoutsLambda', {
+      entry: join(__dirname, '..', '..', 'resources', 'workout', 'get-workouts.js'),
+      ...nodeJsFunctionProps,
+    });
    //  const updateOneLambda = new NodejsFunction(this, 'updateItemFunction', {
    //    entry: join(__dirname, 'lambdas', 'update-one.ts'),
    //    ...nodeJsFunctionProps,
@@ -47,15 +55,15 @@ export class WorkoutDataServiceStack extends Construct {
 
     // Grant the Lambda function read access to the DynamoDB table
    //  dynamoTable.grantReadWriteData(getAllLambda);
-   //  dynamoTable.grantReadWriteData(getOneLambda);
+    workoutDataTable.grantReadWriteData(getWorkoutLambda);
     workoutDataTable.grantReadWriteData(createWorkoutLambda);
-   //  dynamoTable.grantReadWriteData(updateOneLambda);
+    workoutDataTable.grantReadWriteData(getWorkoutsLambda);
    //  dynamoTable.grantReadWriteData(deleteOneLambda);
 
     // Integrate the Lambda functions with the API Gateway resource
-   //  const getAllIntegration = new LambdaIntegration(getAllLambda);
-    const createOneIntegration = new LambdaIntegration(createWorkoutLambda);
-   //  const getOneIntegration = new LambdaIntegration(getOneLambda);
+    const getWorkoutIntegration = new LambdaIntegration(getWorkoutLambda);
+    const createWorkoutIntegration = new LambdaIntegration(createWorkoutLambda);
+    const getWorkoutsIntegration = new LambdaIntegration(getWorkoutsLambda);
    //  const updateOneIntegration = new LambdaIntegration(updateOneLambda);
    //  const deleteOneIntegration = new LambdaIntegration(deleteOneLambda);
 
@@ -65,13 +73,13 @@ export class WorkoutDataServiceStack extends Construct {
       restApiName: 'Workout Service'
     });
 
-    const items = api.root.addResource('workout');
-   //  items.addMethod('GET', getAllIntegration);
-    items.addMethod('POST', createOneIntegration);
-    addCorsOptions(items);
+    const workouts = api.root.addResource('workouts');
+    workouts.addMethod('GET', getWorkoutsIntegration);
+    workouts.addMethod('POST', createWorkoutIntegration);
+    addCorsOptions(workouts);
 
-   //  const singleItem = items.addResource('{id}');
-   //  singleItem.addMethod('GET', getOneIntegration);
+    const singleWorkout = workouts.addResource('{workoutId}');
+    singleWorkout.addMethod('GET', getWorkoutIntegration);
    //  singleItem.addMethod('PATCH', updateOneIntegration);
    //  singleItem.addMethod('DELETE', deleteOneIntegration);
    //  addCorsOptions(singleItem);

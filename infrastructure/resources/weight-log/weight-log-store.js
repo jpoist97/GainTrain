@@ -1,5 +1,6 @@
 import { putItem, queryItems, } from '../utils/ddb-utils';
 import { LOG_DATA_TABLE, } from '../constants/dynamo-constants';
+import _ from 'lodash';
 
 function getPk(userSub) {
    return `${userSub}#weight`;
