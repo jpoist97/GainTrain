@@ -5,21 +5,19 @@ import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-node
 import { join } from 'path'
 import { Construct } from 'constructs';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
+import { addCorsOptions } from '../utils/cors-utils';
 
 export class WorkoutDataServiceStack extends Construct {
-  constructor(scope: Construct, id: string, workoutDataTable: Table) {
+  constructor(scope: Construct, id: string, workoutDataTable: Table, api: RestApi) {
     super(scope, id);
 
     const nodeJsFunctionProps: NodejsFunctionProps = {
       bundling: {
         externalModules: [
-          'aws-sdk', // Use the 'aws-sdk' available in the Lambda runtime
+          'aws-sdk',
         ],
       },
       depsLockFilePath: join(__dirname, '..', '..', 'resources', 'package-lock.json'),
-      environment: {
-        TABLE_NAME: workoutDataTable.tableName,
-      },
       runtime: Runtime.NODEJS_14_X,
     }
 
@@ -32,16 +30,19 @@ export class WorkoutDataServiceStack extends Construct {
    //    entry: join(__dirname, 'lambdas', 'get-all.ts'),
    //    ...nodeJsFunctionProps,
    //  });
-    const createWorkoutLambda = new NodejsFunction(this, 'createWorkoutFunction', {
+    const createWorkoutLambda = new NodejsFunction(this, 'createWorkoutLambda', {
       entry: join(__dirname, '..', '..', 'resources', 'workout', 'create-workout.js'),
+      functionName: 'createWorkoutLambda',
       ...nodeJsFunctionProps,
     });
     const getWorkoutLambda = new NodejsFunction(this, 'getWorkoutLambda', {
       entry: join(__dirname, '..', '..', 'resources', 'workout', 'get-workout.js'),
+      functionName: 'getWorkoutLambda',
       ...nodeJsFunctionProps,
     });
-    const getWorkoutsLambda = new NodejsFunction(this, 'getWorkoutsLambda', {
-      entry: join(__dirname, '..', '..', 'resources', 'workout', 'get-workouts.js'),
+    const listWorkoutsLambda = new NodejsFunction(this, 'listWorkoutsLambda', {
+      entry: join(__dirname, '..', '..', 'resources', 'workout', 'list-workouts.js'),
+      functionName: 'listWorkoutsLambda',
       ...nodeJsFunctionProps,
     });
    //  const updateOneLambda = new NodejsFunction(this, 'updateItemFunction', {
@@ -57,24 +58,22 @@ export class WorkoutDataServiceStack extends Construct {
    //  dynamoTable.grantReadWriteData(getAllLambda);
     workoutDataTable.grantReadWriteData(getWorkoutLambda);
     workoutDataTable.grantReadWriteData(createWorkoutLambda);
-    workoutDataTable.grantReadWriteData(getWorkoutsLambda);
+    workoutDataTable.grantReadWriteData(listWorkoutsLambda);
    //  dynamoTable.grantReadWriteData(deleteOneLambda);
 
     // Integrate the Lambda functions with the API Gateway resource
     const getWorkoutIntegration = new LambdaIntegration(getWorkoutLambda);
     const createWorkoutIntegration = new LambdaIntegration(createWorkoutLambda);
-    const getWorkoutsIntegration = new LambdaIntegration(getWorkoutsLambda);
+    const listWorkoutsIntegration = new LambdaIntegration(listWorkoutsLambda);
    //  const updateOneIntegration = new LambdaIntegration(updateOneLambda);
    //  const deleteOneIntegration = new LambdaIntegration(deleteOneLambda);
 
 
     // Create an API Gateway resource for each of the CRUD operations
-    const api = new RestApi(this, 'workoutApi', {
-      restApiName: 'Workout Service'
-    });
+
 
     const workouts = api.root.addResource('workouts');
-    workouts.addMethod('GET', getWorkoutsIntegration);
+    workouts.addMethod('GET', listWorkoutsIntegration);
     workouts.addMethod('POST', createWorkoutIntegration);
     addCorsOptions(workouts);
 
@@ -84,32 +83,4 @@ export class WorkoutDataServiceStack extends Construct {
    //  singleItem.addMethod('DELETE', deleteOneIntegration);
    //  addCorsOptions(singleItem);
   }
-}
-
-export function addCorsOptions(apiResource: IResource) {
-  apiResource.addMethod('OPTIONS', new MockIntegration({
-    integrationResponses: [{
-      statusCode: '200',
-      responseParameters: {
-        'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-        'method.response.header.Access-Control-Allow-Origin': "'*'",
-        'method.response.header.Access-Control-Allow-Credentials': "'false'",
-        'method.response.header.Access-Control-Allow-Methods': "'OPTIONS,GET,PUT,POST,DELETE'",
-      },
-    }],
-    passthroughBehavior: PassthroughBehavior.NEVER,
-    requestTemplates: {
-      "application/json": "{\"statusCode\": 200}"
-    },
-  }), {
-    methodResponses: [{
-      statusCode: '200',
-      responseParameters: {
-        'method.response.header.Access-Control-Allow-Headers': true,
-        'method.response.header.Access-Control-Allow-Methods': true,
-        'method.response.header.Access-Control-Allow-Credentials': true,
-        'method.response.header.Access-Control-Allow-Origin': true,
-      },
-    }]
-  })
 }

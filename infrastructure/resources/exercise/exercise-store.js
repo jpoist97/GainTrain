@@ -39,6 +39,21 @@ async function queryExercises({ userSub }) {
    return exerciseRecords.map(formatExerciseRecord);
 }
 
+async function querySharedExercises() {
+   const queryParams = {
+      TableName: WORKOUT_DATA_TABLE,
+      Select: 'ALL_ATTRIBUTES',
+      KeyConditionExpression: 'pk = :pk',
+      ExpressionAttributeValues: {
+         ':pk': 'exercise',
+      },
+   };
+
+   const sharedExerciseRecords = await queryItems(queryParams);
+
+   return sharedExerciseRecords.map(formatExerciseRecord);
+}
+
 async function getSingleExercise({ userSub, exerciseId }) {
    const queryParams = {
       TableName: WORKOUT_DATA_TABLE,
@@ -66,4 +81,5 @@ export {
    storeExercise,
    queryExercises,
    getSingleExercise,
+   querySharedExercises
 };

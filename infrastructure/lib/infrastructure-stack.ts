@@ -2,7 +2,9 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import * as workoutService from '../lib/services/workout-service';
+import * as exerciseService from '../lib/services/exercise-service';
 import { WORKOUT_DATA_TABLE, LOG_DATA_TABLE, } from '../constants/dynamo-constants';
+import { RestApi } from 'aws-cdk-lib/aws-apigateway';
 
 export class InfrastructureStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -34,7 +36,12 @@ export class InfrastructureStack extends cdk.Stack {
       tableName: LOG_DATA_TABLE,
     });
 
-    // The code that defines your stack goes here
-    new workoutService.WorkoutDataServiceStack(this, 'WorkoutStack', workoutDataTable);
+
+    const gainTrainApi = new RestApi(this, 'GainTrain API', {
+      restApiName: 'GainTrain API'
+    });
+
+    new workoutService.WorkoutDataServiceStack(this, 'WorkoutStack', workoutDataTable, gainTrainApi);
+    new exerciseService.ExerciseDataServiceStack(this, 'ExerciseStack', workoutDataTable, gainTrainApi);
   }
 }
