@@ -4,27 +4,27 @@ import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 
 function getPk(userSub) {
-   return `${userSub}#workout`;
+   return `${userSub}#cycle`;
 }
 
-function getSk(workoutId) {
-   return `${workoutId}`;
+function getSk(cycleId) {
+   return `${cycleId}`;
 }
 
-async function storeWorkout({userSub, workoutRecord}) {
+async function storeCycle({userSub, cycleRecord}) {
    const params = {
       TableName: WORKOUT_DATA_TABLE,
       Item: {
          pk: getPk(userSub),
          sk: uuidv4(),
-         ...workoutRecord,
+         ...cycleRecord,
       }
    }
 
    await putItem(params);
 }
 
-async function queryWorkouts({ userSub }) {
+async function queryCycles({ userSub }) {
    const queryParams = {
       TableName: WORKOUT_DATA_TABLE,
       Select: 'ALL_ATTRIBUTES',
@@ -34,36 +34,36 @@ async function queryWorkouts({ userSub }) {
       },
    };
 
-   const workoutRecords = await queryItems(queryParams);
+   const cycleRecords = await queryItems(queryParams);
 
-   return workoutRecords.map(formatWorkoutRecord);
+   return cycleRecords.map(formatCycleRecord);
 }
 
-async function getSingleWorkout({ userSub, workoutId }) {
+async function getSingleCylce({ userSub, cycleId }) {
    const queryParams = {
       TableName: WORKOUT_DATA_TABLE,
       Select: 'ALL_ATTRIBUTES',
       KeyConditionExpression: 'pk = :pk and sk = :sk',
       ExpressionAttributeValues: {
          ':pk': getPk(userSub),
-         ':sk': getSk(workoutId),
+         ':sk': getSk(cycleId),
       },
    };
 
-   const workoutRecord = await querySingle(queryParams);
+   const cycleRecord = await querySingle(queryParams);
 
-   return formatWorkoutRecord(workoutRecord);
+   return formatExerciseRecord(cycleRecord);
 }
 
-function formatWorkoutRecord(workoutRecord) {
+function formatCycleRecord(cycleRecord) {
    return _.omit({
-      ...workoutRecord,
-      wokroutId: workoutRecord.sk,
+      ...cycleRecord,
+      cycleId: cycleRecord.sk,
    }, ['pk', 'sk']);
 }
 
 export {
-   storeWorkout,
-   queryWorkouts,
-   getSingleWorkout,
+   queryCycles,
+   getSingleCylce,
+   storeCycle,
 };

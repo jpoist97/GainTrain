@@ -4,27 +4,27 @@ import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 
 function getPk(userSub) {
-   return `${userSub}#workout`;
+   return `${userSub}#exercise`;
 }
 
-function getSk(workoutId) {
-   return `${workoutId}`;
+function getSk(exerciseId) {
+   return `${exerciseId}`;
 }
 
-async function storeWorkout({userSub, workoutRecord}) {
+async function storeExercise({userSub, exerciseRecord}) {
    const params = {
       TableName: WORKOUT_DATA_TABLE,
       Item: {
          pk: getPk(userSub),
          sk: uuidv4(),
-         ...workoutRecord,
+         ...exerciseRecord,
       }
    }
 
    await putItem(params);
 }
 
-async function queryWorkouts({ userSub }) {
+async function queryExercises({ userSub }) {
    const queryParams = {
       TableName: WORKOUT_DATA_TABLE,
       Select: 'ALL_ATTRIBUTES',
@@ -34,36 +34,36 @@ async function queryWorkouts({ userSub }) {
       },
    };
 
-   const workoutRecords = await queryItems(queryParams);
+   const exerciseRecords = await queryItems(queryParams);
 
-   return workoutRecords.map(formatWorkoutRecord);
+   return exerciseRecords.map(formatExerciseRecord);
 }
 
-async function getSingleWorkout({ userSub, workoutId }) {
+async function getSingleExercise({ userSub, exerciseId }) {
    const queryParams = {
       TableName: WORKOUT_DATA_TABLE,
       Select: 'ALL_ATTRIBUTES',
       KeyConditionExpression: 'pk = :pk and sk = :sk',
       ExpressionAttributeValues: {
          ':pk': getPk(userSub),
-         ':sk': getSk(workoutId),
+         ':sk': getSk(exerciseId),
       },
    };
 
-   const workoutRecord = await querySingle(queryParams);
+   const exerciseRecord = await querySingle(queryParams);
 
-   return formatWorkoutRecord(workoutRecord);
+   return formatExerciseRecord(exerciseRecord);
 }
 
-function formatWorkoutRecord(workoutRecord) {
+function formatExerciseRecord(exerciseRecord) {
    return _.omit({
-      ...workoutRecord,
-      wokroutId: workoutRecord.sk,
+      ...exerciseRecord,
+      exerciseId: exerciseRecord.sk,
    }, ['pk', 'sk']);
 }
 
 export {
-   storeWorkout,
-   queryWorkouts,
-   getSingleWorkout,
+   storeExercise,
+   queryExercises,
+   getSingleExercise,
 };

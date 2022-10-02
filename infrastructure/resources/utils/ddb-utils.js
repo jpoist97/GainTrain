@@ -3,15 +3,20 @@ import * as AWS from 'aws-sdk';
 const db = new AWS.DynamoDB.DocumentClient();
 
 async function putItem(params) {
-   await db.putItem(params).promise();
+   console.log('putting item in dynamo with params', params);
+   await db.put(params).promise();
 }
 
 async function querySingle(queryParams) {
-   return await db.query(queryParams).promise().Items[0];
+   console.log('single dynamo query with params', queryParams);
+   const { Items } = await db.query(queryParams).promise();
+   return Items[0];
 }
 
 async function queryItems(queryParams) {
-   return await db.query(queryParams).promise().Items;
+   console.log('querying dynamo db for items', queryParams);
+   const dbResponse =  await db.query(queryParams).promise();
+   return dbResponse.Items;
 }
 
 export {
