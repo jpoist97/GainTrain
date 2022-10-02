@@ -52,7 +52,7 @@ async function getSingleCylce({ userSub, cycleId }) {
 
    const cycleRecord = await querySingle(queryParams);
 
-   return formatExerciseRecord(cycleRecord);
+   return formatCycleRecord(cycleRecord);
 }
 
 function formatCycleRecord(cycleRecord) {
