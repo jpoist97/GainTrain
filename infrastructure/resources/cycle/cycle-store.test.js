@@ -1,4 +1,4 @@
-const { queryItems } = require("../utils/ddb-utils");
+const { queryItems } = require('../utils/ddb-utils');
 
 jest.doMock('../utils/ddb-utils', () => ({
    putItem: jest.fn(),
@@ -8,7 +8,7 @@ jest.doMock('../utils/ddb-utils', () => ({
 
 import * as ddbUtils from '../utils/ddb-utils';
 import * as cycleStore from './cycle-store';
-import { WORKOUT_DATA_TABLE, } from '../constants/dynamo-constants';
+import { WORKOUT_DATA_TABLE } from '../constants/dynamo-constants';
 
 const userSub = 'test-user-sub';
 
@@ -24,7 +24,7 @@ describe('cycle store tests', () => {
             name: 'Push pull legs',
             workouts: ['workout-id-1', 'workout-id-2'],
             daysPerWeek: 4,
-         }
+         };
          ddbUtils.putItem.mockResolvedValueOnce();
 
          // act
@@ -41,7 +41,7 @@ describe('cycle store tests', () => {
                name: 'Push pull legs',
                workouts: ['workout-id-1', 'workout-id-2'],
                daysPerWeek: 4,
-            }
+            },
          });
       });
    });

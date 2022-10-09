@@ -1,5 +1,5 @@
-import { putItem, querySingle, queryItems, } from '../utils/ddb-utils';
-import { WORKOUT_DATA_TABLE, } from '../constants/dynamo-constants';
+import { putItem, querySingle, queryItems } from '../utils/ddb-utils';
+import { WORKOUT_DATA_TABLE } from '../constants/dynamo-constants';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 
@@ -11,15 +11,15 @@ function getSk(cycleId) {
    return `${cycleId}`;
 }
 
-async function storeCycle({userSub, cycleRecord}) {
+async function storeCycle({ userSub, cycleRecord }) {
    const params = {
       TableName: WORKOUT_DATA_TABLE,
       Item: {
          pk: getPk(userSub),
          sk: uuidv4(),
          ...cycleRecord,
-      }
-   }
+      },
+   };
 
    await putItem(params);
 }
@@ -56,14 +56,13 @@ async function getSingleCylce({ userSub, cycleId }) {
 }
 
 function formatCycleRecord(cycleRecord) {
-   return _.omit({
-      ...cycleRecord,
-      cycleId: cycleRecord.sk,
-   }, ['pk', 'sk']);
+   return _.omit(
+      {
+         ...cycleRecord,
+         cycleId: cycleRecord.sk,
+      },
+      ['pk', 'sk']
+   );
 }
 
-export {
-   queryCycles,
-   getSingleCylce,
-   storeCycle,
-};
+export { queryCycles, getSingleCylce, storeCycle };

@@ -15,12 +15,8 @@ async function querySingle(queryParams) {
 
 async function queryItems(queryParams) {
    console.log('querying dynamo db for items', queryParams);
-   const dbResponse =  await db.query(queryParams).promise();
+   const dbResponse = await db.query(queryParams).promise();
    return dbResponse.Items;
 }
 
-export {
- putItem,
- querySingle,
- queryItems,
-}
+export { putItem, querySingle, queryItems };

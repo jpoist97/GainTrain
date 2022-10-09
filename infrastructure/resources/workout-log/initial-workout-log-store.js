@@ -1,5 +1,5 @@
-import { putItem, querySingle, } from '../utils/ddb-utils';
-import { LOG_DATA_TABLE, } from '../constants/dynamo-constants';
+import { putItem, querySingle } from '../utils/ddb-utils';
+import { LOG_DATA_TABLE } from '../constants/dynamo-constants';
 import _ from 'lodash';
 
 function getPk(userSub) {
@@ -17,8 +17,8 @@ async function storeWorkoutLog({ userSub, workoutId, exercisesPerformed }) {
          pk: getPk(userSub),
          sk: getSk(workoutId),
          exercisesPerformed,
-      }
-   }
+      },
+   };
 
    await putItem(params);
 }
@@ -40,13 +40,13 @@ async function getInitialWorkoutLog({ userSub, workoutId }) {
 }
 
 function formatInitialLogRecord(initialLogRecord) {
-   return _.omit({
-      ...initialLogRecord,
-      workoutId: initialLogRecord.sk,
-   }, ['pk', 'sk']);
+   return _.omit(
+      {
+         ...initialLogRecord,
+         workoutId: initialLogRecord.sk,
+      },
+      ['pk', 'sk']
+   );
 }
 
-export {
-   storeWorkoutLog,
-   getInitialWorkoutLog,
-};
+export { storeWorkoutLog, getInitialWorkoutLog };

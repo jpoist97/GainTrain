@@ -1,0 +1,21 @@
+node_modules/**/*
+.expo/*
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+.eslintrc.js
+package-lock.json
+package.json
+.expo-shared/*
+.expo/*
+
+coverage/*
+
+# macOS
+.DS_Store

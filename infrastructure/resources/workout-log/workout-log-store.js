@@ -1,5 +1,5 @@
-import { putItem, querySingle, queryItems, } from '../utils/ddb-utils';
-import { LOG_DATA_TABLE, } from '../constants/dynamo-constants';
+import { putItem, querySingle, queryItems } from '../utils/ddb-utils';
+import { LOG_DATA_TABLE } from '../constants/dynamo-constants';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -18,8 +18,8 @@ async function storeWorkoutLog({ userSub, workoutId, exercisesPerformed }) {
          pk: getPk(userSub, workoutId),
          sk: DateTime.utc().toISO(),
          exercisesPerformed,
-      }
-   }
+      },
+   };
 
    await putItem(params);
 }
@@ -61,14 +61,13 @@ async function queryWorkoutLogs({ userSub, workoutId, startTs, endTs }) {
 }
 
 function formatWorkoutLogRecord(workoutLogRecord) {
-   return _.omit({
-      ...workoutLogRecord,
-      ts: workoutLogRecord.sk,
-   }, ['pk', 'sk']);
+   return _.omit(
+      {
+         ...workoutLogRecord,
+         ts: workoutLogRecord.sk,
+      },
+      ['pk', 'sk']
+   );
 }
 
-export {
-   storeWorkoutLog,
-   getSingleWorkoutLog,
-   queryWorkoutLogs,
-};
+export { storeWorkoutLog, getSingleWorkoutLog, queryWorkoutLogs };
