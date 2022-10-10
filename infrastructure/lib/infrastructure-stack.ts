@@ -10,10 +10,42 @@ import {
    LOG_DATA_TABLE,
 } from '../constants/dynamo-constants';
 import { RestApi } from 'aws-cdk-lib/aws-apigateway';
+import * as cognito from 'aws-cdk-lib/aws-cognito';
 
 export class InfrastructureStack extends cdk.Stack {
    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
       super(scope, id, props);
+
+      const userPool = new cognito.UserPool(this, 'gaintrain-user-pool', {
+         selfSignUpEnabled: true,
+         accountRecovery: cognito.AccountRecovery.PHONE_AND_EMAIL,
+         userVerification: {
+            emailStyle: cognito.VerificationEmailStyle.LINK,
+         },
+         autoVerify: {
+            email: true,
+         },
+         standardAttributes: {
+            email: {
+               required: true,
+               mutable: true,
+            },
+         },
+      });
+
+      const userPoolClient = new cognito.UserPoolClient(
+         this,
+         'gaintrain-user-client',
+         {
+            userPool,
+         }
+      );
+
+      const domain = userPool.addDomain('Domain', {
+         cognitoDomain: {
+            domainPrefix: 'gaintrain',
+         },
+      });
 
       // Define workout_data table
       const workoutDataTable = new Table(this, WORKOUT_DATA_TABLE, {

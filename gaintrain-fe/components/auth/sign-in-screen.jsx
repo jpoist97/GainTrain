@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Text, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 import { useState } from 'react';
+import { signIn } from '../../api/auth/auth-utils';
 
 const Container = styled(SafeAreaView)`
    display: flex;
@@ -39,7 +40,7 @@ const SignInScreen = () => {
    const [password, setPassword] = useState('');
 
    const onSignIn = () => {
-      console.log('Signing in');
+      signIn(username, password);
    };
 
    return (
