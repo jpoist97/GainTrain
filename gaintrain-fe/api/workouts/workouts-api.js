@@ -12,21 +12,21 @@ export async function createWorkout(userSub, workout) {
 }
 
 export async function getWorkout(userSub, workoutId) {
-    const response = await axios.get(`${WORKOUTS_URL}/${workoutId}`, {
-        params: {
-            userSub,
-        }
-    });
-    
-    return response.data;
+   const response = await axios.get(`${WORKOUTS_URL}/${workoutId}`, {
+      params: {
+         userSub,
+      },
+   });
+
+   return response.data;
 }
 
 export async function listWorkouts(userSub) {
-    const response = await axios.get(WORKOUTS_URL, {
-        params: {
-            userSub,
-        }
-    });
+   const response = await axios.get(WORKOUTS_URL, {
+      params: {
+         userSub,
+      },
+   });
 
-    return response.data.workouts;
+   return response.data.workouts;
 }

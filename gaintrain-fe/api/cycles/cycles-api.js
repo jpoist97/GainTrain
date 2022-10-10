@@ -12,21 +12,21 @@ export async function createCycle(userSub, cycle) {
 }
 
 export async function getCycle(userSub, cycleId) {
-    const response = await axios.get(`${CYCLES_URL}/${cycleId}`, {
-        params: {
-            userSub,
-        }
-    });
-    
-    return response.data;
+   const response = await axios.get(`${CYCLES_URL}/${cycleId}`, {
+      params: {
+         userSub,
+      },
+   });
+
+   return response.data;
 }
 
 export async function listCycles(userSub) {
-    const response = await axios.get(CYCLES_URL, {
-        params: {
-            userSub,
-        }
-    });
+   const response = await axios.get(CYCLES_URL, {
+      params: {
+         userSub,
+      },
+   });
 
-    return response.data.cycles;
+   return response.data.cycles;
 }
