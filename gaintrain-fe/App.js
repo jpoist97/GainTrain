@@ -5,7 +5,6 @@ import HomeScreen from './components/home/home-screen';
 import CyclesScreen from './components/cycles/cycles-screen';
 import WorkoutsScreen from './components/workouts/workouts-screen';
 import ProfileScreen from './components/profile/profile-screen';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
