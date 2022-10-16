@@ -102,5 +102,6 @@ export class InfrastructureStack extends cdk.Stack {
          logDataTable,
          gainTrainApi
       );
+      new workoutLogService.WorkoutLogDataServiceStack(this, 'WorkoutLogStack', logDataTable, gainTrainApi);
    }
 }
