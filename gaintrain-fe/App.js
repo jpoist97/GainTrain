@@ -7,6 +7,15 @@ import WorkoutsScreen from './components/workouts/workouts-screen';
 import ProfileScreen from './components/profile/profile-screen';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+   handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+   }),
+});
 
 const Tab = createBottomTabNavigator();
 
