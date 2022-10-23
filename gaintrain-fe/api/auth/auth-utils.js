@@ -49,17 +49,17 @@ export async function signUp(email, password, name) {
       ],
       null,
       (err, res) => {
-        if (err) {
+         if (err) {
             Toast.show({
-                type: 'error',
-                text1: err.message,
-            })
-        } else {
+               type: 'error',
+               text1: err.message,
+            });
+         } else {
             Toast.show({
-                type: 'success',
-                text1: 'Signed up successfully',
-            })
-        }
+               type: 'success',
+               text1: 'Signed up successfully',
+            });
+         }
       }
    );
 }
