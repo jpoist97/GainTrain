@@ -26,6 +26,7 @@ export default function App() {
    const [fontsLoaded] = useFonts({
       'Inter-Medium': require('./assets/fonts/Inter/static/Inter-Medium.ttf'),
       'Inter-Bold': require('./assets/fonts/Inter/static/Inter-Bold.ttf'),
+      'Source-Sans-Pro': require('./assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf')
    });
 
    if (!fontsLoaded) {

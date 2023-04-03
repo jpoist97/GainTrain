@@ -46,7 +46,7 @@ const WorkoutTable = ({ sets, reps, muscleGroups }) => {
             <ColumnHeader>Muscle Groups</ColumnHeader>
             <Row>
                {muscleGroups.map((group) => (
-                  <BaseTag style={{ marginRight: 10 }} text={group} />
+                  <BaseTag style={{ marginRight: 10 }} text={group} key={group} />
                ))}
             </Row>
          </TableColumn>
@@ -59,7 +59,6 @@ const WorkoutCard = ({ name, description, sets, reps, muscleGroups }) => {
       <BaseCard
          title={name}
          subtitle={description}
-        {/* TODO(@justin): Update this to have the options for the popup menu for workouts */}
          options={[]}
          BodyComponent={
             <WorkoutTable sets={sets} reps={reps} muscleGroups={muscleGroups} />
