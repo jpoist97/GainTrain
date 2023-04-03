@@ -40,7 +40,9 @@ export default function App() {
                   screenOptions={({ route }) => ({
                      tabBarIcon: ({ color, size }) => {
                         if (route.name === 'Home') {
-                           return <Entypo name="home" size={size} color={color} />;
+                           return (
+                              <Entypo name="home" size={size} color={color} />
+                           );
                         }
                         if (route.name === 'Workouts') {
                            return (

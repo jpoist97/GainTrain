@@ -6,8 +6,8 @@ const HomeScreen = () => {
    return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
          <WorkoutCard
-            name='Legs A'
-            description='Short decription about workout'
+            name="Legs A"
+            description="Short decription about workout"
             sets={20}
             reps={160}
             muscleGroups={['Biceps', 'Legs']}
