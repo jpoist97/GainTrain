@@ -48,7 +48,7 @@ const OptionsIcon = styled(TouchableOpacity)`
 `;
 
 
-const BaseReadonlyCard = ({ title, subtitle, options, BodyComponent, onPress, primary }) => {
+const BaseCard = ({ title, subtitle, options, BodyComponent, onPress, primary }) => {
   return (
     <Container onPress={onPress}>
       <TopView>
@@ -70,4 +70,4 @@ const BaseReadonlyCard = ({ title, subtitle, options, BodyComponent, onPress, pr
   );
 };
 
-export default BaseReadonlyCard;
+export default BaseCard;
