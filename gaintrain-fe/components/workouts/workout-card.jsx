@@ -59,6 +59,7 @@ const WorkoutCard = ({ name, description, sets, reps, muscleGroups }) => {
       <BaseCard
          title={name}
          subtitle={description}
+        {/* TODO(@justin): Update this to have the options for the popup menu for workouts */}
          options={[]}
          BodyComponent={
             <WorkoutTable sets={sets} reps={reps} muscleGroups={muscleGroups} />
