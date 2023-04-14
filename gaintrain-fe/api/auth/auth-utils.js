@@ -2,7 +2,7 @@ import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { POOL_DATA } from '../environment';
 import Toast from 'react-native-toast-message';
 
-export async function signIn(email, password, setAuthentication) {
+export async function cognitoSignIn(email, password, updateAuthContext) {
    const authDetails = new AmazonCognitoIdentity.AuthenticationDetails({
       Username: email,
       Password: password,
@@ -14,54 +14,61 @@ export async function signIn(email, password, setAuthentication) {
       Pool: userPool,
    });
 
-   user.authenticateUser(authDetails, {
-      onSuccess: (res) => {
-         // Store the sub somewhere global
-         console.log(res.accessToken.payload.sub);
-         Toast.show({
-            type: 'success',
-            text1: 'Signed in successfully!',
-         });
-      },
-      onFailure: (err) => {
-         Toast.show({
-            type: 'error',
-            text1: err.message,
-         });
-      },
-   });
+   return authenticateUserPromise(user, authDetails);
 }
 
-export async function signUp(email, password, name) {
-   const userPool = getUserPool();
-   userPool.signUp(
-      email,
-      password,
-      [
-         {
-            Name: 'name',
-            Value: name,
+async function authenticateUserPromise(user, authDetails) {
+   return new Promise((resolve, reject) => {
+      user.authenticateUser(authDetails, {
+         onSuccess: (res) => {
+            resolve({ userSub: res.accessToken.payload.sub });
          },
-         {
-            Name: 'email',
-            Value: email.toLowerCase(),
-         },
-      ],
-      null,
-      (err, res) => {
-         if (err) {
+         onFailure: (err) => {
             Toast.show({
                type: 'error',
                text1: err.message,
             });
-         } else {
-            Toast.show({
-               type: 'success',
-               text1: 'Signed up successfully',
-            });
+            reject();
+         },
+      });
+   });
+}
+
+export async function cognitoSignUp(email, password, name) {
+   const userPool = getUserPool();
+   return signUpPromise({ userPool, email, password, name });
+}
+
+async function signUpPromise({ userPool, email, password, name }) {
+   return new Promise((resolve, reject) => {
+      userPool.signUp(
+         email,
+         password,
+         [
+            {
+               Name: 'name',
+               Value: name,
+            },
+            {
+               Name: 'email',
+               Value: email.toLowerCase(),
+            },
+         ],
+         null,
+         (err, res) => {
+            if (err) {
+               Toast.show({
+                  type: 'error',
+                  text1: err.message,
+               });
+               reject();
+            } else {
+               console.log('here', res.userSub);
+               resolve({ userSub: res.userSub })
+            }
          }
-      }
-   );
+      );
+   });
 }
 
 function getUserPool() {

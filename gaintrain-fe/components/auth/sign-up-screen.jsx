@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Text, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
-import { useState } from 'react';
-import { signUp } from '../../api/auth/auth-utils';
+import { useState, useContext } from 'react';
+import { AuthContext } from '../../context/auth-context';
+import { useNavigation } from '@react-navigation/native';
 
 const Container = styled(SafeAreaView)`
    display: flex;
@@ -39,10 +40,8 @@ const SignUpScreen = () => {
    const [name, setName] = useState('');
    const [username, setUsername] = useState('');
    const [password, setPassword] = useState('');
-
-   const onSignup = () => {
-      signUp(username, password, name);
-   };
+   const { signUp } = useContext(AuthContext);
+   const navigation = useNavigation();
 
    return (
       <Container>
@@ -58,8 +57,15 @@ const SignUpScreen = () => {
             onChangeText={setPassword}
             value={password}
          />
-         <StyledButton onPress={onSignup}>
+         <StyledButton onPress={() => {
+            signUp({ email: username, password, name });
+         }}>
             <Text>Sign Up</Text>
+         </StyledButton>
+         <StyledButton onPress={() => {
+            navigation.goBack();
+         }}>
+            <Text>Already have an account? Sign in!</Text>
          </StyledButton>
       </Container>
    );
