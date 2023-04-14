@@ -86,13 +86,20 @@ export default function App() {
       () => ({
          signIn: async ({ email, password }) => {
             // TODO: Return accessToken from here once we need to use it
-            const { userSub, accessToken } = await cognitoSignIn(email, password);
-            dispatch({ type: 'SIGN_IN', userSub, accessToken })
-            await SecureStore.setItemAsync('userSub', userSub);
-            Toast.show({
-               type: 'success',
-               text1: 'Signed in successfully!',
-            });
+            try {
+               const { userSub, accessToken } = await cognitoSignIn(email, password);
+               dispatch({ type: 'SIGN_IN', userSub, accessToken })
+               await SecureStore.setItemAsync('userSub', userSub);
+               Toast.show({
+                  type: 'success',
+                  text1: 'Signed in successfully!',
+               });
+            } catch (err) {
+               Toast.show({
+                  type: 'error',
+                  text1: err.message,
+               });
+            }
          },
          signOut: async () => {
             await SecureStore.deleteItemAsync('userSub');
@@ -100,13 +107,21 @@ export default function App() {
          },
          signUp: async ({ email, password, name }) => {
             // TODO: Return accessToken from here once we need to use it
-            const { userSub, accessToken } = await cognitoSignUp(email, password, name);
-            dispatch({ type: 'SIGN_IN', userSub, accessToken })
-            await SecureStore.setItemAsync('userSub', userSub);
-            Toast.show({
-               type: 'success',
-               text1: 'Signed up successfully',
-            });
+            let userSub, accessToken;
+            try {
+               const { userSub, accessToken } = await cognitoSignUp(email, password, name);
+               dispatch({ type: 'SIGN_IN', userSub, accessToken })
+               await SecureStore.setItemAsync('userSub', userSub);
+               Toast.show({
+                  type: 'success',
+                  text1: 'Signed up successfully',
+               });
+            } catch (err) {
+               Toast.show({
+                  type: 'error',
+                  text1: err.message,
+               });
+            }
          },
       }),
       []

@@ -24,11 +24,7 @@ async function authenticateUserPromise(user, authDetails) {
             resolve({ userSub: res.accessToken.payload.sub });
          },
          onFailure: (err) => {
-            Toast.show({
-               type: 'error',
-               text1: err.message,
-            });
-            reject();
+            reject(err);
          },
       });
    });
@@ -57,13 +53,8 @@ async function signUpPromise({ userPool, email, password, name }) {
          null,
          (err, res) => {
             if (err) {
-               Toast.show({
-                  type: 'error',
-                  text1: err.message,
-               });
-               reject();
+               reject(err);
             } else {
-               console.log('here', res.userSub);
                resolve({ userSub: res.userSub })
             }
          }
