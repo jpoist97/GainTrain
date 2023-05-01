@@ -42,11 +42,15 @@ const WorkoutTable = ({ sets, reps, muscleGroups }) => {
                <BaseTag text={reps} />
             </Row>
          </TableColumn>
-         <TableColumn widthPercentage="50%">
+         <TableColumn widthPercentage="67%">
             <ColumnHeader>Muscle Groups</ColumnHeader>
             <Row>
                {muscleGroups.map((group) => (
-                  <BaseTag style={{ marginRight: 10 }} text={group} key={group} />
+                  <BaseTag
+                     style={{ marginRight: 10 }}
+                     text={group}
+                     key={group}
+                  />
                ))}
             </Row>
          </TableColumn>
@@ -54,7 +58,7 @@ const WorkoutTable = ({ sets, reps, muscleGroups }) => {
    );
 };
 
-const WorkoutCard = ({ name, description, sets, reps, muscleGroups }) => {
+const WorkoutCard = ({ name, description, sets, reps, muscleGroups, className }) => {
    return (
       <BaseCard
          title={name}
@@ -63,6 +67,7 @@ const WorkoutCard = ({ name, description, sets, reps, muscleGroups }) => {
          BodyComponent={
             <WorkoutTable sets={sets} reps={reps} muscleGroups={muscleGroups} />
          }
+         className={className}
       />
    );
 };

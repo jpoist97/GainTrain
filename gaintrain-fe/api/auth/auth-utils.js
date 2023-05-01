@@ -55,7 +55,7 @@ async function signUpPromise({ userPool, email, password, name }) {
             if (err) {
                reject(err);
             } else {
-               resolve({ userSub: res.userSub })
+               resolve({ userSub: res.userSub });
             }
          }
       );

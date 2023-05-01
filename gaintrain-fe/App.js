@@ -33,7 +33,7 @@ export default function App() {
    const [fontsLoaded] = useFonts({
       'Inter-Medium': require('./assets/fonts/Inter/static/Inter-Medium.ttf'),
       'Inter-Bold': require('./assets/fonts/Inter/static/Inter-Bold.ttf'),
-      'Source-Sans-Pro': require('./assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf')
+      'Source-Sans-Pro': require('./assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf'),
    });
    const [state, dispatch] = React.useReducer(
       (prevState, action) => {
@@ -82,50 +82,57 @@ export default function App() {
       bootstrapAsync();
    }, []);
 
-   const authContext = React.useMemo(
-      () => ({
-         signIn: async ({ email, password }) => {
-            // TODO: Return accessToken from here once we need to use it
-            try {
-               const { userSub, accessToken } = await cognitoSignIn(email, password);
-               dispatch({ type: 'SIGN_IN', userSub, accessToken })
-               await SecureStore.setItemAsync('userSub', userSub);
-               Toast.show({
-                  type: 'success',
-                  text1: 'Signed in successfully!',
-               });
-            } catch (err) {
-               Toast.show({
-                  type: 'error',
-                  text1: err.message,
-               });
-            }
-         },
-         signOut: async () => {
-            await SecureStore.deleteItemAsync('userSub');
-            dispatch({ type: 'SIGN_OUT' })
-         },
-         signUp: async ({ email, password, name }) => {
-            // TODO: Return accessToken from here once we need to use it
-            let userSub, accessToken;
-            try {
-               const { userSub, accessToken } = await cognitoSignUp(email, password, name);
-               dispatch({ type: 'SIGN_IN', userSub, accessToken })
-               await SecureStore.setItemAsync('userSub', userSub);
-               Toast.show({
-                  type: 'success',
-                  text1: 'Signed up successfully',
-               });
-            } catch (err) {
-               Toast.show({
-                  type: 'error',
-                  text1: err.message,
-               });
-            }
-         },
-      }),
-      []
-   );
+   const authContext = {
+      signIn: async ({ email, password }) => {
+         // TODO: Return accessToken from here once we need to use it
+         try {
+            const { userSub, accessToken } = await cognitoSignIn(
+               email,
+               password
+            );
+            dispatch({ type: 'SIGN_IN', userSub, accessToken });
+            await SecureStore.setItemAsync('userSub', userSub);
+            Toast.show({
+               type: 'success',
+               text1: 'Signed in successfully!',
+            });
+         } catch (err) {
+            Toast.show({
+               type: 'error',
+               text1: err.message,
+            });
+         }
+      },
+      signOut: async () => {
+         await SecureStore.deleteItemAsync('userSub');
+         dispatch({ type: 'SIGN_OUT' });
+      },
+      signUp: async ({ email, password, name }) => {
+         // TODO: Return accessToken from here once we need to use it
+         let userSub, accessToken;
+         try {
+            const { userSub, accessToken } = await cognitoSignUp(
+               email,
+               password,
+               name
+            );
+            dispatch({ type: 'SIGN_IN', userSub, accessToken });
+            await SecureStore.setItemAsync('userSub', userSub);
+            Toast.show({
+               type: 'success',
+               text1: 'Signed up successfully',
+            });
+         } catch (err) {
+            Toast.show({
+               type: 'error',
+               text1: err.message,
+            });
+         }
+      },
+      getUserSub: () => {
+         return state.userSub;
+      },
+   };
 
    if (!fontsLoaded) {
       return null;
@@ -137,60 +144,77 @@ export default function App() {
             <NavigationContainer>
                {!state.userSub ? (
                   <Stack.Navigator>
-                     <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
-                     <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
+                     <Stack.Screen
+                        name="SignIn"
+                        component={SignInScreen}
+                        options={{ headerShown: false }}
+                     />
+                     <Stack.Screen
+                        name="SignUp"
+                        component={SignUpScreen}
+                        options={{ headerShown: false }}
+                     />
                   </Stack.Navigator>
-               ) : (<MenuProvider>
-
-                  <Tab.Navigator
-                     screenOptions={({ route }) => ({
-                        tabBarIcon: ({ color, size }) => {
-                           if (route.name === 'Home') {
-                              return (
-                                 <Entypo name="home" size={size} color={color} />
-                              );
-                           }
-                           if (route.name === 'Workouts') {
-                              return (
-                                 <FontAwesome5
-                                    name="dumbbell"
-                                    size={size}
-                                    color={color}
-                                 />
-                              );
-                           }
-                           if (route.name === 'Cycles') {
-                              return (
-                                 <Entypo name="cycle" size={size} color={color} />
-                              );
-                           }
-                           if (route.name === 'Profile') {
-                              return (
-                                 <FontAwesome5
-                                    name="user-circle"
-                                    size={size}
-                                    color={color}
-                                 />
-                              );
-                           }
-                        },
-                        tabBarActiveTintColor: 'purple',
-                        tabBarInactiveTintColor: 'gray',
-                        headerShown: false,
-                     })}
-                  >
-                     <Tab.Screen name="Home" component={HomeScreen} />
-                     <Tab.Screen name="Workouts" component={WorkoutsScreen} />
-                     <Tab.Screen name="Cycles" component={CyclesScreen} />
-                     <Tab.Screen name="Profile" component={ProfileScreen} />
-                  </Tab.Navigator>
-
-
-               </MenuProvider >)
-               }
+               ) : (
+                  <MenuProvider>
+                     <Tab.Navigator
+                        screenOptions={({ route }) => ({
+                           tabBarIcon: ({ color, size }) => {
+                              if (route.name === 'Home') {
+                                 return (
+                                    <Entypo
+                                       name="home"
+                                       size={size}
+                                       color={color}
+                                    />
+                                 );
+                              }
+                              if (route.name === 'Workouts') {
+                                 return (
+                                    <FontAwesome5
+                                       name="dumbbell"
+                                       size={size}
+                                       color={color}
+                                    />
+                                 );
+                              }
+                              if (route.name === 'Cycles') {
+                                 return (
+                                    <Entypo
+                                       name="cycle"
+                                       size={size}
+                                       color={color}
+                                    />
+                                 );
+                              }
+                              if (route.name === 'Profile') {
+                                 return (
+                                    <FontAwesome5
+                                       name="user-circle"
+                                       size={size}
+                                       color={color}
+                                    />
+                                 );
+                              }
+                           },
+                           tabBarActiveTintColor: 'purple',
+                           tabBarInactiveTintColor: 'gray',
+                           headerShown: false,
+                        })}
+                     >
+                        <Tab.Screen name="Home" component={HomeScreen} />
+                        <Tab.Screen
+                           name="Workouts"
+                           component={WorkoutsScreen}
+                        />
+                        <Tab.Screen name="Cycles" component={CyclesScreen} />
+                        <Tab.Screen name="Profile" component={ProfileScreen} />
+                     </Tab.Navigator>
+                  </MenuProvider>
+               )}
             </NavigationContainer>
             <Toast />
-         </AuthContext.Provider >
+         </AuthContext.Provider>
       </>
    );
 }
