@@ -14,13 +14,16 @@ const StyledButton = styled(TouchableOpacity)`
    margin-top: 20px;
 `;
 
-
 const ProfileScreen = () => {
    const { signOut } = useContext(AuthContext);
    return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
          <Text>Profile!</Text>
-         <StyledButton onPress={() => { signOut() }}>
+         <StyledButton
+            onPress={() => {
+               signOut();
+            }}
+         >
             <Text>Sign out</Text>
          </StyledButton>
       </View>

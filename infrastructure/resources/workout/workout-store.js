@@ -59,7 +59,7 @@ function formatWorkoutRecord(workoutRecord) {
    return _.omit(
       {
          ...workoutRecord,
-         wokroutId: workoutRecord.sk,
+         workoutId: workoutRecord.sk,
       },
       ['pk', 'sk']
    );

@@ -11,7 +11,7 @@ const Container = styled(TouchableOpacity)`
    border-color: rgba(0, 0, 0, 0.1);
    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
    border-radius: 5px;
-   width: 90%;
+   width: 100%;
 `;
 
 const TopView = styled.View`

@@ -57,14 +57,18 @@ const SignUpScreen = () => {
             onChangeText={setPassword}
             value={password}
          />
-         <StyledButton onPress={() => {
-            signUp({ email: username, password, name });
-         }}>
+         <StyledButton
+            onPress={() => {
+               signUp({ email: username, password, name });
+            }}
+         >
             <Text>Sign Up</Text>
          </StyledButton>
-         <StyledButton onPress={() => {
-            navigation.goBack();
-         }}>
+         <StyledButton
+            onPress={() => {
+               navigation.goBack();
+            }}
+         >
             <Text>Already have an account? Sign in!</Text>
          </StyledButton>
       </Container>
