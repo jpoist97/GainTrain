@@ -17,6 +17,7 @@ import SignUpScreen from './components/auth/sign-up-screen';
 import { cognitoSignIn, cognitoSignUp } from './api/auth/auth-utils';
 import { AuthContext } from './context/auth-context';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { primaryOrange } from './theme/orange-theme';
 
 Notifications.setNotificationHandler({
    handleNotification: async () => ({
@@ -174,7 +175,7 @@ export default function App() {
                               );
                            }
                         },
-                        tabBarActiveTintColor: 'purple',
+                        tabBarActiveTintColor: primaryOrange,
                         tabBarInactiveTintColor: 'gray',
                         headerShown: false,
                      })}
